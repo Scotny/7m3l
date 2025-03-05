@@ -1,60 +1,64 @@
+let list = document.getElementById("cards");
+let cart = document.getElementById("product");
+let total = document.getElementById("total");
+
+let ctgr = document.getElementById("category");
+let sort = document.getElementById("price");
+let search = document.querySelector("input[type='search']");
+
+let data = []; // Store all products
+
+// Fetch and render products
 fetch("https://fakestoreapi.com/products")
-  .then((response) => response.json())
-  .then((data) => renderCard(data));
+  .then((res) => res.json())
+  .then((res) => {
+    data = res;
+    show(data);
+  });
 
-let cards = document.getElementById("cards");
+// Create product card
+function card(item) {
+  let div = document.createElement("div");
+  div.classList.add("card");
+  div.innerHTML = `
+    <img src="${item.image}" alt="product">
+    <h2>${item.title}</h2>
+    <h3>${item.category}</h3>
+    <h2 class="price">$${item.price.toFixed(2)}</h2>
+    <button class="buy">Sotib olish</button>
+  `;
+  list.appendChild(div);
 
-function createCard(params) {
-  let card = document.createElement("div");
-  card.classList.add("card");
-  cards.appendChild(card);
-
-  let img = document.createElement("img");
-  img.src = params?.image;
-  card.appendChild(img);
-
-  let title = document.createElement("h3");
-  title.innerHTML = params?.title;
-  card.appendChild(title);
-
-  let p = document.createElement("p");
-  p.innerHTML = params?.description;
-  card.appendChild(p);
-
-  let buy = document.createElement("div");
-  buy.classList.add("buy");
-  card.appendChild(buy);
-
-  let price = document.createElement("h3");
-  price.classList.add("price");
-  price.innerHTML = "$" + params?.price;
-  buy.appendChild(price);
-
-  let order = document.createElement("button");
-  order.innerHTML = "Sotib olish";
-  buy.appendChild(order);
-
-  return card;
-}
-
-function renderCard(params) {
-  params.forEach((element) => {
-    createCard(element);
+  // Add to cart
+  div.querySelector(".buy").addEventListener("click", () => {
+    if (confirm("Savatga qo'shilsinmi?")) {
+      cart.innerHTML += `${item.title} - $${item.price.toFixed(2)}<br>`;
+      total.innerHTML = `Total: $${(
+        parseFloat(total.innerHTML.replace("Total: $", "") || 0) + item.price
+      ).toFixed(2)}`;
+    }
   });
 }
 
-let product = document.getElementById("product");
-let total = document.getElementById("total");
+// Render filtered/sorted products
+function show(items) {
+  list.innerHTML = "";
+  items.forEach(card);
+}
 
-cards.addEventListener("click", (event) => {
-    alert("Maxsulot savatga qoshildi")
-    let button = event.target.closest("button");
-    if (button) {
-        let card = button.closest(".card");
-        let title = card.querySelector("h3").innerHTML;
-        let price = parseFloat(card.querySelector(".price").innerHTML.replace("$", "")).toFixed(2);
+// Apply filters
+function filter() {
+  let res = data.filter(
+    (i) =>
+      (ctgr.value === "default" || i.category === ctgr.value) &&
+      i.title.toLowerCase().includes(search.value.toLowerCase())
+  );
 
-        product.innerHTML += `${title} - $${price}` + "<br>";
-        total.innerHTML = "Total: $" + (parseFloat(total.innerHTML.replace("Total: $", "")) + parseFloat(price)).toFixed(2);
-    }
-});
+  if (sort.value === "down") res.sort((a, b) => a.price - b.price);
+  if (sort.value === "up") res.sort((a, b) => b.price - a.price);
+
+  show(res);
+}
+
+// Event listeners
+[ctgr, sort, search].forEach((el) => el.addEventListener("input", filter));

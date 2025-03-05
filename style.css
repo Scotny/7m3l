@@ -2,11 +2,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
+  outline: none;
 }
 
 .container {
-  width: 1260px;
+  width: 1440px;
   margin: 0 auto;
 }
 
@@ -16,10 +17,37 @@ body {
   padding-top: 30px;
 }
 
+h1{
+  font-size: 50px;
+  color: rgb(70, 70, 255);
+}
+
+h3{
+  font-weight: 400;
+}
+
+.sort {
+  width: 100%;
+  margin: 20px 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+select,
+input {
+  padding: 10px;
+  font-size: large;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 .cards {
   display: flex;
   flex-flow: row wrap;
-  gap: 20px;
+  justify-content: center;
+  gap: 40px;
   margin-top: 30px;
 }
 
@@ -28,33 +56,23 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 300px;
-  height: 400px;
+  width: 330px;
+  height: 450px;
   background: white;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
 }
 
 .card img {
-  max-height: 150px;
-}
-
-.card p {
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limits text to 2 lines */
-  line-clamp: 2; /* Limits text to 2 lines */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.buy {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  max-height: 160px;
 }
 
 .price {
@@ -64,9 +82,10 @@ body {
 button {
   background: green;
   color: white;
-  padding: 10px;
+  padding: 15px;
   border: none;
   border-radius: 5px;
+  font-size: large;
   cursor: pointer;
 }
 
